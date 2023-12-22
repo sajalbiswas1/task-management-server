@@ -30,10 +30,21 @@ async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
         // await client.connect();
+        // await client.connect();
 
         const userCollection = client.db("taskManagement").collection("users");
         const taskListCollection = client.db("taskManagement").collection("taskList");
 
+
+
+        app.get('/user', async (req, res) => {
+            let query = {}
+            if (req?.query?.email) {
+              query = { email: req.query.email}
+            }
+            const cursor = await userCollection.findOne(query);
+            res.send(cursor);
+          })
 
         app.post('/users', async (req, res) => {
             const user = req.body;
@@ -47,6 +58,8 @@ async function run() {
             const result = await userCollection.insertOne(user);
             res.send(result);
         });
+
+
 
 
         // Send a ping to confirm a successful connection
